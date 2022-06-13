@@ -37,38 +37,42 @@ def query_dns(hostname) -> str:
     print(cmd)
 
 
-def main():
+def get_opt():
     outputFile = "" # expect String
     filePath = ""  # expect String
     verbose = False  # expect Bool
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hvo:f:", ["help", "verbose", "output", "file"])
+        opt_list, args = getopt.getopt(sys.argv[1:], "hvo:f:", ["help", "verbose", "output=", "file="])
     except getopt.GetoptError as err:
-        #usage()
-        sys.exit()
-    for opt, arg in opts:
+        usage()
+        #sys.exit(2)
+        pass
+    for opt, arg in opt_list:
         # Help Menu opt
-        if opt == "-h" or opt == "--help":
+        if opt in ("-h", "--help"):
             usage()
+            sys.exit()
         # Verbose opt
-        elif opt == "-v" or opt =="--verbose":
+        elif opt in ("-v", "--verbose"):
             verbose = True
-            print("verbose")
+            print("Verbose = " + str(verbose))
         # Output file opt
-        elif opt == "-o" or opt == "--output":
+        elif opt in ("-o", "--output"):
             outputFile = arg
-            print(f"This is the outputFile: {outputFile}")
+            print(f"This is the outputFile: {outputFile}")  # Todo Create create_output_file() function
         # Input file opt
-        elif opt == "-f" or opt == "--file":
+        elif opt in ("-f", "--file"):   # Todo: Create input_file() function
             filePath = arg
             print(f"This is the input file path: {filePath}")
+            
         else:
             assert False, "unhandled option"
+
+def main():
+    get_opt()
+    
         
 if __name__ == '__main__':
     main()
 
-
-def main():
-    
