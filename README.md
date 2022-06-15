@@ -2,7 +2,7 @@
 
 Building tools to manage Akamai CDN and WAF operations.
 
-### get_staging
+### get_staging.py
 Normally a host's DNS records point to the Akamai "production" edge network.
 This tool allows us to input "Akamaized" hostnames and return the IP address for the Staging network.
 
