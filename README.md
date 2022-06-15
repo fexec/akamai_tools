@@ -1,4 +1,3 @@
-# mod_proxy
-HTTP Proxy that passes custom objects and headers. 
-Will be used to extend mitmproxy.
+# Akamai Tools
 
+Building tools to manage Akamai CDN and WAF operations.
