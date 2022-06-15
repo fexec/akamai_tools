@@ -46,14 +46,20 @@ def query_dns(hostname) -> str:
     # Creates list of each dns record in query
     split = out.splitlines()
     dns_records = [line.split() for line in split]
-    print(dns_records)
+    return(dns_records)
 
 
+#  dns_records data structure:
+#  Name | TTL | IN | Record Type |Record Data
+#  [0]    [1]  [2]       [3]       [4]
+#
+### Main Logic Here -- will be split into functions for code reuse and proper logic flow ###
 def query_dns_init(hostname) -> str:
     
     # Define variables
     host = str(hostname)
     edge_hostname = ""
+    gtm_server = ""
 
     # First dns query
     dig_string = "/usr/bin/dig +noadditional +noquestion +nocomments +nocmd +nostats " + host
@@ -86,21 +92,34 @@ def query_dns_init(hostname) -> str:
     for record in dns_records:
         if (record[0] == edge_hostname) and (record[3] == "CNAME") and ("akamaiedge" or "akadns" in record[4]):
             print("Edge Hostname validated: " + edge_hostname)
-            print("Edge Server identified: " + record[4])
+            print("Server identified: " + record[4])
             edge_server = record[4]
             # If akadns, we must repeat one more time to find the edge server
             #maybe recurse to take care of this additional factor
             if ("akadns" in edge_server):
-                print("\nThis is a Akamai Global Traffic Manager hostname")
-                print("Needs an additional iteration to reach edge server")
+                print("\nThis is a Akamai Global Traffic Manager hostname.")
+                print("Needs an additional iteration to reach edge server.\n")
+                gtm_server = edge_server
                 continue
             if ("akamaiedge" in edge_server):
-                print("Success! This is an edge server")
-                continue
+                print("Success! This is THE edge server")
+                #return edge_server
+                break 
+        # Checks for GTM redirector record
+        elif gtm_server:
+            if (record[0] == gtm_server) and (record[3] == "CNAME") and ("akamaiedge" in record[4]):
+                print("Success! This is THE edge server: " + record[4])
+                edge_server = record[4]
+                #return edge_server
             
-    ###### Stage 3 will lookup the A record for edge server and return IP address
-    
-    
+        
+    ###### Stage 3 will lookup input edge_server query A record and return IP address
+    print("\nStage 3:")
+    records = query_dns(edge_server)
+    for record in records:
+        if (edge_server == record[0]) and (record[3] == "A"):
+            end_ip = record[4]
+            print("This is the stage ip you seek: " + end_ip)
 
 def get_opt():
 
