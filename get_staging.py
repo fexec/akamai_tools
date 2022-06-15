@@ -49,7 +49,7 @@ def query_dns(hostname) -> str:
     print(dns_records)
 
 
-def records_parse(hostname) -> str:
+def query_dns_init(hostname) -> str:
     
     # Define variables
     host = str(hostname)
@@ -141,7 +141,7 @@ def get_opt():
 
 def main():
     hostname = get_opt()
-    records_parse(hostname)
+    query_dns_init(hostname)
         
 if __name__ == '__main__':
     main()
